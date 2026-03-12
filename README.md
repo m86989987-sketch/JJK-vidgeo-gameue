@@ -1,20 +1,33 @@
-# JJK Shibuya Map Prototype
+# JJK: Shibuya Incident (Prototype)
 
-A first playable map blockout for a high-quality 3D JJK-inspired game environment, focused on a neon, rainy Shibuya-style district.
+This is now set up as an **openable game prototype** (not just code files). You can launch it with one command/script and it opens in your browser automatically.
 
-## Run
+## Quick start (openable launcher)
 
+### Windows
+- Double-click `launch_game.bat`
+
+### Mac/Linux
 ```bash
-python3 -m http.server 4173
+./launch_game.sh
 ```
 
-Then open `http://localhost:4173`.
+### Cross-platform
+```bash
+python3 run_game.py
+```
 
-## Included in this base map
+The launcher starts a local server and opens:
 
-- Central scramble-crossing style intersection
-- Dense surrounding skyline with varied building silhouettes
-- Neon billboards and local light emitters
-- Wet-night lighting/fog mood
-- Basic first-person traversal controls
-- Rain particle ambience
+- `http://localhost:4173`
+
+Press `Ctrl+C` in the terminal to stop.
+
+## Current gameplay slice
+
+- Start menu with **Play** button
+- Pause menu on `Esc`, with **Resume** button
+- First-person exploration controls
+- Shibuya-style rainy neon district blockout
+- Procedural dense building skyline
+- Scramble-crosswalk-inspired intersection

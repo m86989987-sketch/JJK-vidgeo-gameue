@@ -2,6 +2,13 @@ import * as THREE from "https://unpkg.com/three@0.164.1/build/three.module.js";
 import { PointerLockControls } from "https://unpkg.com/three@0.164.1/examples/jsm/controls/PointerLockControls.js";
 
 const canvas = document.querySelector("#scene");
+const titleScreen = document.querySelector("#title-screen");
+const pauseScreen = document.querySelector("#pause-screen");
+const playBtn = document.querySelector("#play-btn");
+const resumeBtn = document.querySelector("#resume-btn");
+const hud = document.querySelector("#hud");
+const coords = document.querySelector("#coords");
+
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -18,7 +25,6 @@ const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerH
 camera.position.set(0, 2, 22);
 
 const controls = new PointerLockControls(camera, document.body);
-document.body.addEventListener("click", () => controls.lock());
 
 const ambient = new THREE.HemisphereLight(0xb2c4ff, 0x151515, 0.42);
 scene.add(ambient);
@@ -69,11 +75,7 @@ function addCrosswalk(x, z, horizontal = true) {
       new THREE.BoxGeometry(horizontal ? 2.4 : 8, 0.02, horizontal ? 8 : 2.4),
       stripeMat
     );
-    stripe.position.set(
-      horizontal ? -13 + i * 2.35 : 0,
-      0.07,
-      horizontal ? 0 : -13 + i * 2.35
-    );
+    stripe.position.set(horizontal ? -13 + i * 2.35 : 0, 0.07, horizontal ? 0 : -13 + i * 2.35);
     group.add(stripe);
   }
   group.position.set(x, 0, z);
@@ -91,11 +93,7 @@ function createBuilding(x, z, w, h, d) {
   const baseColor = new THREE.Color().setHSL(0.62, 0.2, 0.09 + Math.random() * 0.12);
   const building = new THREE.Mesh(
     new THREE.BoxGeometry(w, h, d),
-    new THREE.MeshStandardMaterial({
-      color: baseColor,
-      roughness: 0.65,
-      metalness: 0.15
-    })
+    new THREE.MeshStandardMaterial({ color: baseColor, roughness: 0.65, metalness: 0.15 })
   );
   building.position.set(x, h / 2, z);
   building.castShadow = true;
@@ -171,6 +169,19 @@ scene.add(drizzle);
 
 const move = { forward: false, back: false, left: false, right: false, up: false, down: false, sprint: false };
 
+let gameStarted = false;
+
+function startGame() {
+  controls.lock();
+}
+
+function showPause(visible) {
+  pauseScreen.classList.toggle("visible", visible);
+}
+
+playBtn.addEventListener("click", startGame);
+resumeBtn.addEventListener("click", startGame);
+
 document.addEventListener("keydown", (e) => {
   if (e.code === "KeyW") move.forward = true;
   if (e.code === "KeyS") move.back = true;
@@ -191,6 +202,19 @@ document.addEventListener("keyup", (e) => {
   if (e.code === "ShiftLeft") move.sprint = false;
 });
 
+controls.addEventListener("lock", () => {
+  gameStarted = true;
+  titleScreen.classList.remove("visible");
+  showPause(false);
+  hud.classList.remove("hidden");
+});
+
+controls.addEventListener("unlock", () => {
+  if (gameStarted) {
+    showPause(true);
+  }
+});
+
 const clock = new THREE.Clock();
 
 function animate() {
@@ -207,6 +231,8 @@ function animate() {
 
     camera.position.y = THREE.MathUtils.clamp(camera.position.y, 1.5, 20);
   }
+
+  coords.textContent = `X: ${camera.position.x.toFixed(1)} Y: ${camera.position.y.toFixed(1)} Z: ${camera.position.z.toFixed(1)}`;
 
   const rain = drizzle.geometry.attributes.position;
   for (let i = 0; i < particleCount; i++) {

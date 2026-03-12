@@ -3,14 +3,32 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>JJK Shibuya Map Prototype</title>
+    <title>JJK Shibuya Incident - Prototype</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div id="hud">
-      <h1>JJK Shibuya Map Prototype</h1>
-      <p>WASD: Move | Shift: Sprint | Mouse: Look | Q/E: Up/Down</p>
+    <div id="title-screen" class="overlay visible">
+      <div class="panel">
+        <h1>JJK: Shibuya Incident</h1>
+        <p>Prototype Map Build</p>
+        <button id="play-btn" type="button">Play</button>
+        <small>WASD Move • Mouse Look • Shift Sprint • Q/E Up/Down • Esc Pause</small>
+      </div>
     </div>
+
+    <div id="pause-screen" class="overlay">
+      <div class="panel">
+        <h2>Paused</h2>
+        <p>Click resume to continue.</p>
+        <button id="resume-btn" type="button">Resume</button>
+      </div>
+    </div>
+
+    <div id="hud" class="hud hidden">
+      <strong>Shibuya District</strong>
+      <span id="coords">X: 0.0 Y: 0.0 Z: 0.0</span>
+    </div>
+
     <canvas id="scene"></canvas>
     <script type="module" src="main.js"></script>
   </body>
